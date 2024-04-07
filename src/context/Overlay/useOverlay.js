@@ -3,8 +3,6 @@ import { OverlayContext } from './OverlayProvider';
 /** @tossdocs-ignore */
 import { OverlayController } from './OverlayController';
 
-let elementId = 1;
-
 export function useOverlay({ exitOnUnmount = true } = {}) {
   const context = useContext(OverlayContext);
 
@@ -12,27 +10,28 @@ export function useOverlay({ exitOnUnmount = true } = {}) {
     throw new Error('useOverlay is only available within OverlayProvider.');
   }
 
-  const { mount, unmount } = context;
-  const [id] = useState(() => String(elementId++));
+  const { mount, unmount, unmountAll } = context;
+  // const [id] = useState(() => String(elementId++));
+  const id = useRef(1);
 
   const overlayRef = useRef(null);
 
   useEffect(() => {
     return () => {
       if (exitOnUnmount) {
-        unmount(id);
+        unmountAll();
       }
     };
-  }, [exitOnUnmount, id, unmount]);
+  }, [exitOnUnmount, id, unmountAll]);
 
   return useMemo(
     () => ({
       open: (overlayElement) => {
-        return new Promise((resolve) => {
+        id.current = id.current + 1;
+        const resolvePromise = (resolve) => {
           mount(
-            id,
+            id.current,
             <OverlayController
-              // NOTE: state should be reset every time we open an overlay
               key={Date.now()}
               ref={overlayRef}
               overlayElement={overlayElement}
@@ -42,6 +41,10 @@ export function useOverlay({ exitOnUnmount = true } = {}) {
               resolve={resolve}
             />
           );
+        };
+
+        return new Promise((resolve) => {
+          resolvePromise(resolve);
         });
       },
       close: () => {

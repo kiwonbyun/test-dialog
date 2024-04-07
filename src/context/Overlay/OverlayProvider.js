@@ -25,7 +25,14 @@ export function OverlayProvider({ children }) {
     });
   }, []);
 
-  const contextMethod = useMemo(() => ({ mount, unmount }), [mount, unmount]);
+  const unmountAll = useCallback(() => {
+    setOverlayById(new Map());
+  }, []);
+
+  const contextMethod = useMemo(
+    () => ({ mount, unmount, unmountAll }),
+    [mount, unmount, unmountAll]
+  );
 
   return (
     <OverlayContext.Provider value={contextMethod}>

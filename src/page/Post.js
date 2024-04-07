@@ -28,16 +28,40 @@ function Post() {
   //   console.log('hi');
   // };
 
+  const handleAdditionalPopup = async () => {
+    await overlay.open(({ isOpen, close, resolve }) => {
+      return isOpen ? (
+        <div>
+          addpopup
+          <button
+            onClick={() => {
+              close();
+              resolve();
+            }}
+          >
+            추가팝업실행!
+          </button>
+        </div>
+      ) : null;
+    });
+    console.log('hhi2');
+  };
+
   const handlePurchase = async () => {
     // 인터페이스 개선 open이 프로미스를 리턴, resolve를 호출해주면 await 을 탈출
     await overlay.open(({ close, isOpen, resolve }) => (
       <Popup
         isOpen={isOpen}
         close={close}
-        message={'첫번째 팝업'}
+        message={
+          <div>
+            '첫번째 팝업'
+            <button onClick={handleAdditionalPopup}>추가팝업열기</button>
+          </div>
+        }
         onOk={() => {
           resolve();
-          // close();
+          close();
         }}
       />
     ));
