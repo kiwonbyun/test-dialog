@@ -1,73 +1,18 @@
 import React from 'react';
-import {
-  dialog_type_confirm,
-  useDialogContext,
-} from '../context/Dialog/DialogProvider';
-import { useOverlay } from '../context/Overlay/useOverlay';
-import Popup from '../component/Popup';
+import useOverlay from "../lib/overlay/useOverlay";
+import ConfirmCloseModal from "../component/Modal/ConfirmCloseModal";
 
 function Post() {
-  const overlay = useOverlay();
-
-  // promise 인터페이스 너무 어려움.
-  // useOverlay 가 한번 호출되면 id가 고정되어 있어서 중복 overlay를 못띄움
-  // const handlePurchase = async () => {
-  //   await new Promise((resolve) => {
-  //     overlay.open(({ close, isOpen }) => (
-  //       <Popup
-  //         isOpen={isOpen}
-  //         close={close}
-  //         message={'첫번째 팝업'}
-  //         onOk={() => {
-  //           resolve();
-  //           close();
-  //         }}
-  //       />
-  //     ));
-  //   });
-  //   console.log('hi');
-  // };
-
-  const handleAdditionalPopup = async () => {
-    await overlay.open(({ isOpen, close, resolve }) => {
-      return isOpen ? (
-        <div>
-          addpopup
-          <button
-            onClick={() => {
-              close();
-              resolve();
-            }}
-          >
-            추가팝업실행!
-          </button>
-        </div>
-      ) : null;
-    });
-    console.log('hhi2');
-  };
+    const overlay1 = useOverlay();
 
   const handlePurchase = async () => {
-    // 인터페이스 개선 open이 프로미스를 리턴, resolve를 호출해주면 await 을 탈출
-    await overlay.open(({ close, isOpen, resolve }) => (
-      <Popup
-        isOpen={isOpen}
-        close={close}
-        message={
-          <div>
-            '첫번째 팝업'
-            <button onClick={handleAdditionalPopup}>추가팝업열기</button>
-          </div>
-        }
-        onOk={() => {
-          resolve();
-          close();
-        }}
-      />
-    ));
+      const result = await overlay1.open((props)=>(
+          <ConfirmCloseModal {...props}>sad</ConfirmCloseModal>
+      ));
+      if(result ==='reject') return;
+      console.log(result);
 
-    // 여기서 await overlay.open()을 한번 더 할수 있어야함. id를 다르게 줘보자
-    console.log('hi');
+
   };
 
   return (
