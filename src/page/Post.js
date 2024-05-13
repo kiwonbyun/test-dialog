@@ -7,10 +7,9 @@ function Post() {
     const overlay2 = useOverlay();
 
     const handleOpenAnother = async() =>{
-         const confirm = await overlay2.open((props)=>{
-             console.log(props)
-            return <Overlay.ConfirmCloseModal {...props}>중첩!</Overlay.ConfirmCloseModal>
-        })
+         const confirm = await overlay2.open((props)=>
+            <Overlay.ConfirmCloseModal {...props}>중첩!</Overlay.ConfirmCloseModal>
+        )
         if(!confirm)return
         overlay1.exit()
     }

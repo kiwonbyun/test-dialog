@@ -1,6 +1,10 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import {OverlayContext} from "./OverlayProvider";
-import OverlayController from "./OverlayController";
+import OverlayController, {CreateOverlayElement} from "./OverlayController";
+
+export interface OverlayControlRef {
+    close: () => void;
+}
 
 let elementId = 1;
 
@@ -12,7 +16,7 @@ const useOverlay = ({exitOnUnmount = true}={}) => {
     }
     const {mount, unmount} = context;
     const [id] = useState(()=>String(elementId++));
-    const overlayRef = useRef(null);
+    const overlayRef = useRef<OverlayControlRef>(null);
 
 
     useEffect(() => {
@@ -23,8 +27,9 @@ const useOverlay = ({exitOnUnmount = true}={}) => {
         }
     }, [unmount, id,exitOnUnmount]);
 
+
     return {
-      open:(overlayElement)=>{
+      open:(overlayElement: CreateOverlayElement)=>{
           return new Promise((resolve)=>{
               mount(
                   id,
