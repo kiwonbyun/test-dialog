@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {createPortal} from "react-dom";
+import ConfirmCloseModal from "./ConfirmCloseModal";
+import ConfirmModal from "./ConfirmModal";
 
-const Modal = ({isOpen, children, close}) => {
+const Portal = ({isOpen, children, close}) => {
     if(!isOpen)return null;
 
-
-
     return createPortal(
-        <>
+        <Fragment>
             <div style={{
                 position: 'fixed',
                 top: 0,
@@ -31,9 +31,13 @@ const Modal = ({isOpen, children, close}) => {
             }}>
                 {children}
             </div>
-        </>,
+        </Fragment>,
         document.getElementById("modal-root")
     );
 };
 
-export default Modal;
+export const Overlay={}
+Overlay.ConfirmCloseModal = ConfirmCloseModal;
+Overlay.ConfirmModal = ConfirmModal;
+
+export default Portal;

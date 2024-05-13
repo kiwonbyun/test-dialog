@@ -4,6 +4,7 @@ export const OverlayContext = createContext(null)
 
 const OverlayProvider = ({children}) => {
     const [overlays, setOverlays] = useState(new Map());
+    console.log(overlays)
 
     const mount = useCallback((id, element) =>{
         setOverlays(prevOverlays=>{

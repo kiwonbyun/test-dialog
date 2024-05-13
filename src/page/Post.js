@@ -1,18 +1,29 @@
 import React from 'react';
 import useOverlay from "../lib/overlay/useOverlay";
-import ConfirmCloseModal from "../component/Modal/ConfirmCloseModal";
+import {Overlay} from "../component/Modal/Portal";
 
 function Post() {
     const overlay1 = useOverlay();
+    const overlay2 = useOverlay();
+
+    const handleOpenAnother = async() =>{
+         const confirm = await overlay2.open((props)=>{
+             console.log(props)
+            return <Overlay.ConfirmCloseModal {...props}>중첩!</Overlay.ConfirmCloseModal>
+        })
+        if(!confirm)return
+        overlay1.exit()
+    }
 
   const handlePurchase = async () => {
-      const result = await overlay1.open((props)=>(
-          <ConfirmCloseModal {...props}>sad</ConfirmCloseModal>
+      const isConfirm = await overlay1.open((props)=>(
+          <Overlay.ConfirmModal{...props}>
+              <h1>Modal Title</h1>
+              <button onClick={handleOpenAnother}>중첩모달 열기</button>
+          </Overlay.ConfirmModal>
       ));
-      if(result ==='reject') return;
-      console.log(result);
-
-
+      if(!isConfirm) return;
+      console.log("hi");
   };
 
   return (
